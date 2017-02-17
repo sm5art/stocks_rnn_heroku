@@ -66,5 +66,9 @@
     "sass-lint": "^1.10.2",
     "sass-loader": "^4.1.1",
     "webpack": "^2.2.1"
+  },
+  "engines": {
+    "node": "7.4.0",
+    "npm": "4.0.5"
   }
 }
