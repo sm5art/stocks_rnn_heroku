@@ -6,7 +6,6 @@
   "repository": "",
   "license": "",
   "scripts": {
-    "test": "grommet check",
     "dev-server": "nodemon ./server/dev",
     "dev": "cross-env NODE_ENV=development grommet pack",
     "dist": "cross-env NODE_ENV=production grommet pack",
@@ -88,5 +87,5 @@
     "testPathIgnorePatterns": [
       "<rootDir>[/\\\\](dist|templates|node_modules)[/\\\\]"
     ]
-  },
+  }
 }
