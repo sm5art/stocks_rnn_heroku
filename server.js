@@ -2,22 +2,30 @@
 var express = require('express');
 path = require('path'),
 app = express(),
-port = 1234,
+port = process.env.PORT,
 bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var cookieParser = require('cookie-parser')
 var passport = require('passport');
 var flash = require('connect-flash')
-var expressSession = require('express-session');
+var session = require('express-session');
+var redisStore = require('connect-redis')(session);
+
 
 //db connection
-mongoose.connect('mongodb://localhost/norum');
+mongoose.connect(process.env.MONGODB_URI);
 
 //configs
 require('./config/passport')(passport);
 
 //middleware
-app.use(expressSession({secret: 'mySecretKey'}));
+app.use(session( { secret: 'keyboard cat',
+                    cookie: { maxAge: 9999999999 },
+                    rolling: true,
+                    resave: true,
+                    saveUninitialized: false,
+                    store: new redisStore({ttl:9999999999, url: process.env.REDIS_URL
+                  })}));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
