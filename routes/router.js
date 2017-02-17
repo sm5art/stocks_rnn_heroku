@@ -1,18 +1,15 @@
+var StockController = require('../controllers/Stock')
+
 module.exports = function(app, passport) {
 
-    app.get('/', function(req, res) {
-      if(req.user)
-        res.redirect('/profile')
-      else
-        res.render('index.ejs'); // load the index.ejs file
-    });
+
 
     app.get('/logout',function(req,res){
       req.logout();
       res.redirect('/');
     });
 
-    app.get('/login',
+    app.get('/auth/google',
       passport.authenticate('google', { scope:
         [ 'profile' ] }
     ));
@@ -23,15 +20,15 @@ module.exports = function(app, passport) {
             failureRedirect: '/login'
     }));
 
+    app.get('/session', (req, res) => {
+      if(req.user)
+        res.json({user: req.user})
+      else {
+        res.json({state:false})
+      }
+    })
 
-    app.get('/profile', isLoggedIn, function(req, res) {
-        res.render('profile.ejs',{user:req.user});
-    });
 
-    app.get('/logout', function(req, res) {
-        req.logout();
-        res.redirect('/');
-    });
 };
 
 // route middleware to make sure a user is logged in

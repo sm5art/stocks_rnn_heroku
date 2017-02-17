@@ -37,9 +37,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 require('./routes/router')(app,passport);
 app.get('*', function(req, res) {
-    res.json({
-        'route': 'Sorry this page does not exist!'
-    });
+    res.render("index.ejs");
 });
 app.listen(port);
 console.log("server running on port "+port)
