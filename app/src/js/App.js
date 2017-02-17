@@ -23,8 +23,10 @@ store.dispatch(initialize(window.location.pathname));
 export default () => (
   <Provider store={store}>
     <IntlProvider locale={localeData.locale} messages={localeData.messages}>
-      <Router routes={routes} history={history}
-        onUpdate={() => document.getElementById('content').focus()} />
+      <Router history={history}
+        onUpdate={() => document.getElementById('content').focus()}>
+        {routes(store)}
+      </Router>
     </IntlProvider>
   </Provider>
 );
