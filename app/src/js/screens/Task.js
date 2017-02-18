@@ -13,10 +13,6 @@ import Value from 'grommet/components/Value';
 import Spinning from 'grommet/components/icons/Spinning';
 import LinkPrevious from 'grommet/components/icons/base/LinkPrevious';
 
-import {
-  loadTask, unloadTask
-} from '../actions/tasks';
-
 import { pageLoaded } from './utils';
 
 class Task extends Component {
@@ -24,12 +20,10 @@ class Task extends Component {
   componentDidMount() {
     const { params, dispatch } = this.props;
     pageLoaded('Task');
-    dispatch(loadTask(params.id));
   }
 
   componentWillUnmount() {
     const { params, dispatch } = this.props;
-    dispatch(unloadTask(params.id));
   }
 
   render() {

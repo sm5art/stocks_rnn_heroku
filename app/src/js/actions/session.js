@@ -1,7 +1,5 @@
 import { browserHistory as history } from 'react-router';
 import { SESSION_LOAD, SESSION_LOGIN, SESSION_LOGOUT } from '../actions';
-import { deleteSession, postSession } from '../api/session';
-import { updateHeaders } from '../api/utils';
 
 const localStorage = window.localStorage;
 

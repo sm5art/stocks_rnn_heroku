@@ -17,9 +17,7 @@ import Spinning from 'grommet/components/icons/Spinning';
 import { getMessage } from 'grommet/utils/Intl';
 
 import NavControl from '../components/NavControl';
-import {
-  loadDashboard, unloadDashboard
-} from '../actions/dashboard';
+
 
 import { pageLoaded } from './utils';
 

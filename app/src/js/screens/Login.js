@@ -54,7 +54,7 @@ class Login extends Component {
           </Section>
           <Footer direction='row' size='small'
             pad={{ horizontal: 'medium', vertical: 'small' }}>
-            <span className='secondary'>&copy; 2017 Samba Bamba Labs</span>
+            <span className='secondary'>&copy; 2017 Memr.io Labs</span>
           </Footer>
         </Sidebar>
 
