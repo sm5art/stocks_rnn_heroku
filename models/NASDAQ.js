@@ -7,8 +7,7 @@ var nasdaqSchema = new Schema( {
           summary_quote: String,
           market_cap: String,
           name: String,
-          industry: String,
-          symbol: String
+          industry: String
 })
 
-module.exports = mongoose.model('NASDAQ', nasdaqSchema);
+module.exports = mongoose.model('NASDAQ', nasdaqSchema, 'NASDAQ');

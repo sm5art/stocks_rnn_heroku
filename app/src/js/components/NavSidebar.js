@@ -37,7 +37,7 @@ class NavSidebar extends Component {
         <Header size='large' justify='between' pad={{ horizontal: 'medium' }}>
           <Title onClick={this._onClose} a11yTitle='Close Menu'>
             <Logo />
-            <span>App</span>
+            <span>hedgedump</span>
           </Title>
           <Button icon={<CloseIcon />} onClick={this._onClose} plain={true}
             a11yTitle='Close Menu' />
@@ -46,7 +46,7 @@ class NavSidebar extends Component {
           {links}
         </Menu>
         <Footer pad={{ horizontal: 'medium', vertical: 'small' }}>
-          <SessionMenu dropAlign={{ bottom: 'bottom' }} />
+          <SessionMenu dropAlign={{bottom : 'bottom'}}/>
         </Footer>
       </Sidebar>
     );

@@ -5,6 +5,7 @@ var NASDAQ = require('../models/NASDAQ');
 module.exports.list_stocks = function(req,res) {
 	module.exports.list_for_user_id(req.user._id, (err, stocks) => {
 		if(err){
+			console.log(err)
 			res.json({error: true})
 		}
 		else {
@@ -14,7 +15,8 @@ module.exports.list_stocks = function(req,res) {
 }
 
 module.exports.post_stock = function(req, res){
-	module.exports.add_stock(req.body.symbol, req.user._id, (err, stock)=>{
+	var symbol = req.body.symbol.toUpperCase()
+	module.exports.add_stock(req.user._id, symbol, (err, stock)=>{
 		if(err){
 			res.json({error: true})
 		}
@@ -34,7 +36,7 @@ module.exports.add_stock = function(user_id, symbol, cb) {
 					cb(err, null)
 				}
 				else if(stock){
-					cb(null, stock)
+					cb(null, [])
 				}
 				else {
 					stock = new Stock({"requested_by_user_id": user_id, symbol})
@@ -47,7 +49,7 @@ module.exports.add_stock = function(user_id, symbol, cb) {
 										cb(err, null)
 									}
 									else if(stock_pred){
-										cb(null, stock)
+										cb(null, [stock])
 									}
 									else {
 										stock_pred = new StockPred({symbol});
@@ -56,7 +58,7 @@ module.exports.add_stock = function(user_id, symbol, cb) {
 												cb(err, null)
 											}
 											else {
-												cb(null, stock)
+												cb(null, [stock])
 											}
 										})
 									}

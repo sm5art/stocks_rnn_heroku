@@ -1,6 +1,6 @@
 import { announcePageLoaded } from 'grommet/utils/Announcer';
 
-const DEFAULT_TITLE = 'App';
+const DEFAULT_TITLE = 'hedgedump';
 
 export function pageLoaded(title) {
   if (document) {

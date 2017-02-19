@@ -4,89 +4,98 @@ import { connect } from 'react-redux';
 import Anchor from 'grommet/components/Anchor';
 import Article from 'grommet/components/Article';
 import Box from 'grommet/components/Box';
+import Section from 'grommet/components/Section';
 import Header from 'grommet/components/Header';
 import Heading from 'grommet/components/Heading';
 import Label from 'grommet/components/Label';
 import List from 'grommet/components/List';
 import ListItem from 'grommet/components/ListItem';
+import Title from 'grommet/components/Title'
+import Search from 'grommet/components/Search'
 import Notification from 'grommet/components/Notification';
 import Paragraph from 'grommet/components/Paragraph';
 import Value from 'grommet/components/Value';
 import Meter from 'grommet/components/Meter';
 import Spinning from 'grommet/components/icons/Spinning';
 import { getMessage } from 'grommet/utils/Intl';
+import Button from 'grommet/components/Button';
+import AddMenu from '../components/AddMenu';
 
 import NavControl from '../components/NavControl';
 
-
+import { initialize, addStock, unload } from '../actions/dashboard'
 import { pageLoaded } from './utils';
 
 class Dashboard extends Component {
 
   componentDidMount() {
     pageLoaded('Dashboard');
+    const { dispatch } = this.props;
+    dispatch(initialize())
   }
 
   componentWillUnmount() {
+    const {dispatch} = this.props;
+    dispatch(unload())
   }
 
   render() {
-    const { error, tasks } = this.props;
+    const { error, loading, stocks } = this.props;
     const { intl } = this.context;
 
     let errorNode;
     let listNode;
     if (error) {
       errorNode = (
-        <Notification status='critical' size='large' state={error.message}
-          message='An unexpected error happened, please try again later' />
+        <Notification status='critical' size='medium'
+          message='Stock invalid, only NASDAQ stocks are supported at this time' />
       );
-    } else if (tasks.length === 0) {
+    } else if (loading) {
       listNode = (
         <Box direction='row' responsive={false}
           pad={{ between: 'small', horizontal: 'medium', vertical: 'medium' }}>
           <Spinning /><span>Loading...</span>
         </Box>
       );
-    } else {
-      const tasksNode = (tasks || []).map((task, index) => (
+    }
+
+    const stocksNode = (stocks || []).map((stock, index) => (
         <ListItem key={index} justify='between'>
-          <Label><Anchor path={`/tasks/${task.id}`} label={task.name} /></Label>
+          <Label><Anchor path={`/stocks/${stock._id}`} label={stock.symbol} /></Label>
           <Box direction='row' responsive={false}
             pad={{ between: 'small' }}>
-            <Value value={task.percentComplete}
-              units='%'
-              align='start' size='small' />
-            <Meter value={task.percentComplete} />
+            <Label>{stock.date}</Label>
           </Box>
         </ListItem>
       ));
 
       listNode = (
         <List>
-          {tasksNode}
+          {stocksNode}
         </List>
       );
-    }
+
 
     return (
       <Article primary={true}>
         <Header direction='row' justify='between' size='large'
           pad={{ horizontal: 'medium', between: 'small' }}>
-          <NavControl />
+          <NavControl name="Dashboard"/>
+          <Box flex="grow"/>
+          <AddMenu/>
         </Header>
         {errorNode}
-        <Box pad='medium'>
-          <Heading tag='h3' strong={true}>
-            Running Tasks
-          </Heading>
-          <Paragraph size='large'>
-            The backend here is using request polling (5 second interval).
-            See <Anchor path='/tasks'
-              label={getMessage(intl, 'Tasks')} /> page for an example
-            of websocket communication.
-          </Paragraph>
-        </Box>
+        <Section colorIndex="grey-4-a" pad='medium'>
+          <Header>
+              <Title>Watchlist</Title>
+              <Box flex="grow"></Box>
+              <Search inline={true}
+                size='medium'
+                placeHolder='Search'
+                dropAlign={{"right": "right"}} />
+
+          </Header>
+        </Section>
         {listNode}
       </Article>
     );
@@ -95,8 +104,8 @@ class Dashboard extends Component {
 
 Dashboard.propTypes = {
   dispatch: PropTypes.func.isRequired,
-  error: PropTypes.object,
-  tasks: PropTypes.arrayOf(PropTypes.object)
+  error: PropTypes.boolean,
+  stocks: PropTypes.arrayOf(PropTypes.object)
 };
 
 Dashboard.contextTypes = {

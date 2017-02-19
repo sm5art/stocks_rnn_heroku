@@ -1,19 +1,24 @@
-import { DASHBOARD_LOAD, DASHBOARD_UNLOAD } from '../actions';
+import {
+ DASH_ERROR, UPDATE_STOCKS, UNLOAD_STOCKS
+} from '../actions';
 import { createReducer } from './utils';
 
 const initialState = {
-  tasks: []
+  stocks: [],
+  loading: true,
+  error: false
 };
 
 const handlers = {
-  [DASHBOARD_LOAD]: (state, action) => {
-    if (!action.error) {
-      action.payload.error = undefined;
-      return action.payload;
-    }
-    return { error: action.payload };
+  [UPDATE_STOCKS]: (state, action) => {
+    return {stocks: state.stocks.concat(action.stocks), loading: false, error: false}
   },
-  [DASHBOARD_UNLOAD]: () => initialState
+  [DASH_ERROR]: () =>{
+    return { error: true }
+  },
+  [UNLOAD_STOCKS]: ()=>{
+    return initialState
+  }
 };
 
 export default createReducer(initialState, handlers);

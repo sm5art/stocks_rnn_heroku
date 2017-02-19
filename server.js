@@ -19,6 +19,8 @@ mongoose.connect(process.env.MONGODB_URI);
 require('./config/passport')(passport);
 
 //middleware
+app.use(bodyParser.json()); // for parsing application/json
+app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 app.use(session( { secret: process.env.SESSION_SECRET,
                     cookie: { maxAge: 9999999999 },
                     rolling: true,
@@ -30,7 +32,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(bodyParser());
+
 
 //set views and engines and routing
 app.set('views', path.join(__dirname, 'views'));

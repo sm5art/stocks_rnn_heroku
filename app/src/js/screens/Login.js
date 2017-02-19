@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { browserHistory as history } from 'react-router'
 
 import Split from 'grommet/components/Split';
 import Sidebar from 'grommet/components/Sidebar';
@@ -8,8 +9,12 @@ import Article from 'grommet/components/Article';
 import Section from 'grommet/components/Section';
 import Heading from 'grommet/components/Heading';
 import Paragraph from 'grommet/components/Paragraph';
+import Card from 'grommet/components/Card'
 import Footer from 'grommet/components/Footer';
 import Logo from 'grommet/components/icons/Grommet';
+import Hero from 'grommet/components/Hero';
+import Box from 'grommet/components/Box';
+import Image from 'grommet/components/Image'
 
 import Google from 'grommet/components/icons/base/PlatformGoogle'
 import { login } from '../actions/session';
@@ -20,6 +25,13 @@ class Login extends Component {
 
   constructor() {
     super();
+  }
+
+  componentWillMount(){
+    const { session } = this.props;
+    if(session.token){
+      history.push('/dashboard')
+    }
   }
 
   componentDidMount() {
@@ -38,12 +50,10 @@ class Login extends Component {
       <Split flex='left' separator={true}>
 
         <Article>
-          <Section full={true} colorIndex='brand' texture='url(img/splash.png)'
-            pad='large' justify='center' align='center'>
-            <Heading tag='h1'><strong>Stocks.js</strong></Heading>
-            <Paragraph align='center' size='large'>
-              Bringing machine learning to the cloud
-            </Paragraph>
+          <Section full={true} colorIndex='accent-2'>
+            <Hero background={<Image src='/img/marquee.jpg' fit="cover"/>}>
+              <Box align="end"><Card textSize="xlarge" label="Bringing machine learning in the cloud to stock prediction" heading={<strong>hedgedump.js</strong>}/></Box>
+            </Hero>
           </Section>
         </Article>
 
