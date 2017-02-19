@@ -15,3 +15,7 @@ const element = document.getElementById('content');
 ReactDOM.render(<App />, element);
 
 document.body.classList.remove('loading');
+
+setTimeout(function () {
+  window.scrollTo(0, 1);
+}, 1000);
