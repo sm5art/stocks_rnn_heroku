@@ -7,7 +7,8 @@
   "license": "",
   "scripts": {
     "watch": "webpack --watch --config webpack.config.babel.js",
-    "postinstall": "webpack --config webpack.config.babel.js"
+    "postinstall": "webpack --config webpack.config.babel.js",
+    "test": "mocha"
   },
   "dependencies": {
     "bcrypt-nodejs": "0.0.3",
@@ -19,6 +20,7 @@
     "express": "^4.14.0",
     "express-session": "^1.15.1",
     "grommet": "^1.1.0",
+    "mocha": "^3.2.0",
     "mongoose": "^4.8.3",
     "morgan": "^1.7.0",
     "passport": "^0.3.2",
@@ -32,6 +34,7 @@
     "react-router": "^3.0.0",
     "redux": "^3.6.0",
     "redux-thunk": "^2.1.0",
+    "should": "^11.2.0",
     "ws": "^1.1.1"
   },
   "devDependencies": {

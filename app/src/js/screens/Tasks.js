@@ -17,9 +17,6 @@ import { getMessage } from 'grommet/utils/Intl';
 
 import NavControl from '../components/NavControl';
 
-import {
-  loadTasks, unloadTasks
-} from '../actions/tasks';
 
 import { pageLoaded } from './utils';
 
@@ -27,11 +24,9 @@ class Tasks extends Component {
 
   componentDidMount() {
     pageLoaded('Tasks');
-    this.props.dispatch(loadTasks());
   }
 
   componentWillUnmount() {
-    this.props.dispatch(unloadTasks());
   }
 
   render() {

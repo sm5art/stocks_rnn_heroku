@@ -19,7 +19,7 @@ mongoose.connect(process.env.MONGODB_URI);
 require('./config/passport')(passport);
 
 //middleware
-app.use(session( { secret: 'keyboard cat',
+app.use(session( { secret: process.env.SESSION_SECRET,
                     cookie: { maxAge: 9999999999 },
                     rolling: true,
                     resave: true,
