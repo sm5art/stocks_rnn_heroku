@@ -2,7 +2,7 @@ import path from 'path';
 import webpack from 'webpack';
 import CopyWebpackPlugin from 'copy-webpack-plugin';
 
-const env = 'dev';
+const env = process.env.ENVIRONMENT;
 
 let plugins = [
   new CopyWebpackPlugin([{ from: './public' }]),
