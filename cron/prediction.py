@@ -32,8 +32,14 @@ stocks = []
 start = datetime.datetime(2010, 1, 1)
 end = datetime.datetime.today() + datetime.timedelta(days=1)
 
-discriminator = datetime.datetime.utcnow().date() - BDay(1) + BDay(1)
-cursor = db.stock_preds.find({ 'pred_date': {'$ne': discriminator} })
+discriminator = None
+
+if datetime.datetime.utcnow().weekday() < 5  and datetime.datetime.utcnow() < datetime.datetime.fromordinal(datetime.datetime.utcnow().date().toordinal())+datetime.timedelta(hours=22):
+    discriminator = datetime.datetime.utcnow().date()
+else:
+    discriminator = datetime.datetime.utcnow().date() + BDay(1)
+
+cursor = db.stock_preds.find({ 'pred_date': {'$ne': datetime.datetime.fromordinal(discriminator.toordinal())} })
 
 for stock in cursor:
     stocks.append(stock)
@@ -113,7 +119,10 @@ def main():
         time_of_prediction = convert_time(dates[-1])+BDay(1)
         y = model.predict(numpy.array(dataset[-5:]).reshape(1,1,5))
         prediction = scaler.inverse_transform(y).reshape(1)[0]
-        db.stock_preds.update_one({'symbol': symbol}, {'$set':{ 'previous_points': previous, 'prediction': float(prediction), 'pred_date': time_of_prediction }})
+        previous_predictions = []
+        for i in trainPredict:
+            previous_predictions.append(float(i[0]))
+        db.stock_preds.update_one({'symbol': symbol}, {'$set':{ 'previous_points': previous, 'previous_predictions': previous_predictions[-30:], 'prediction': float(prediction), 'pred_date': time_of_prediction }})
 
 
 

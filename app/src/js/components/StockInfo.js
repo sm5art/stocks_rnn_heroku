@@ -25,15 +25,15 @@ class StockInfo extends Component {
     if(info.data[stock.symbol]){
       if(!info.loading) {
         infoComp = (
-          <Label>{info.data[stock.symbol].sector}</Label>
+          <Label>{info.data[stock.symbol].industry}</Label>
         )
       }
     }
     if(prediction.data[stock.symbol]){
       if(!prediction.loading && prediction.data[stock.symbol].pred_date) {
         const pred = parseFloat(prediction.data[stock.symbol].prediction);
-        const previous_points = prediction.data[stock.symbol].previous_points;
-        const last_point = parseFloat(previous_points[previous_points.length-1].value)
+        const previous_points = prediction.data[stock.symbol].previous_predictions;
+        const last_point = parseFloat(previous_points[previous_points.length-1])
         const net_change = (pred-last_point)/last_point*100
         const color = net_change > 0 ? "ok" : "critical";
         predictionComp = (

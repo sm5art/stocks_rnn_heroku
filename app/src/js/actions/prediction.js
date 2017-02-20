@@ -29,7 +29,6 @@ export function getPrediction(symbol) {
     })
       .then(response=>{return response.json()})
       .then(json => {
-        console.log(json)
         dispatch(updatePredictions(json.prediction))
       })
     }

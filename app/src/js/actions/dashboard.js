@@ -20,7 +20,6 @@ export function addStock(symbol) {
     })
       .then(response=>{return response.json()})
       .then(json => {
-        console.log(json)
         if(json.error){
           dispatch(error())
         }

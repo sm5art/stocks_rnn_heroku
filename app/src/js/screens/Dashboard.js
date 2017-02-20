@@ -36,7 +36,6 @@ class Dashboard extends Component {
   }
 
   onSelect(_id){
-    console.log(_id)
   }
 
   componentDidMount() {

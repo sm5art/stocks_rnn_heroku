@@ -8,9 +8,7 @@ export function initialize() {
     return fetch('/session', {credentials: 'include'})
       .then(response => response.json())
       .then(json => {
-        console.log(json)
         if(json["user"] != undefined){
-          console.log('dispatched')
           dispatch({type:SESSION_LOAD, payload:{email: json.user._id, name: json.user.google.name, token: json.user.google.token}})
           history.push(window.location.pathname == '/login' ? '/dashboard': window.location.pathname)
         }

@@ -6,7 +6,8 @@ var stockSchema = new Schema( {
           symbol: String,
           prediction: Number,
           pred_date: Date,
-          previous_points: [{date: Date, value: Number}]
+          previous_points: [{date: Date, value: Number}],
+          previous_predictions: [Number]
 })
 
 module.exports = mongoose.model('stock_pred', stockSchema);
