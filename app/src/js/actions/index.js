@@ -19,3 +19,11 @@ export const TASK_UNLOAD = 'TASK_UNLOAD';
 export const NAV_ACTIVATE = 'NAV_ACTIVATE';
 export const NAV_ENABLE = 'NAV_ENABLE';
 export const NAV_RESPONSIVE = 'NAV_RESPONSIVE';
+
+//Predictions
+export const UPDATE_PREDICTIONS = 'UPDATE_PREDICTIONS';
+export const UNLOAD_PREDICTIONS = 'UNLOAD_PREDICTIONS';
+
+//info
+export const UPDATE_INFO = 'UPDATE_INFO';
+export const UNLOAD_INFO = 'UNLOAD_INFO';

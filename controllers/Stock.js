@@ -1,6 +1,7 @@
 var Stock = require('../models/Stock');
 var StockPred = require('../models/StockPred');
 var NASDAQ = require('../models/NASDAQ');
+var NASDAQController = require('../controllers/NASDAQ')
 
 module.exports.list_stocks = function(req,res) {
 	module.exports.list_for_user_id(req.user._id, (err, stocks) => {
@@ -24,6 +25,21 @@ module.exports.post_stock = function(req, res){
 			res.json({error: false, stock})
 		}
 	})
+}
+
+module.exports.getSymbolsForUser = function(user_id, cb){
+  module.exports.list_for_user_id(user_id, function(err, stocks){
+    if(err){
+      cb(err, null)
+    }
+    else {
+      var symbols = []
+      for (var i in stocks){
+        symbols.push(stocks[i].symbol)
+      }
+      cb(null, symbols)
+    }
+  })
 }
 
 module.exports.add_stock = function(user_id, symbol, cb) {

@@ -20,23 +20,38 @@ import Spinning from 'grommet/components/icons/Spinning';
 import { getMessage } from 'grommet/utils/Intl';
 import Button from 'grommet/components/Button';
 import AddMenu from '../components/AddMenu';
+import StockInfo from '../components/StockInfo'
 
 import NavControl from '../components/NavControl';
 
-import { initialize, addStock, unload } from '../actions/dashboard'
+import { initializeStocks, unloadStocks } from '../actions/dashboard';
+import { initializePrediction, unloadPredictions} from '../actions/prediction';
+import { initializeInfo, unloadInfo} from '../actions/stockinfo';
 import { pageLoaded } from './utils';
 
 class Dashboard extends Component {
+  constructor(){
+    super()
+    this.onSelect.bind(this)
+  }
+
+  onSelect(_id){
+    console.log(_id)
+  }
 
   componentDidMount() {
     pageLoaded('Dashboard');
     const { dispatch } = this.props;
-    dispatch(initialize())
+    dispatch(initializeStocks())
+    dispatch(initializeInfo())
+    dispatch(initializePrediction())
   }
 
   componentWillUnmount() {
     const {dispatch} = this.props;
-    dispatch(unload())
+    dispatch(unloadInfo())
+    dispatch(unloadPredictions())
+    dispatch(unloadStocks())
   }
 
   render() {
@@ -45,13 +60,14 @@ class Dashboard extends Component {
 
     let errorNode;
     let listNode;
+    let loadNode;
     if (error) {
       errorNode = (
         <Notification status='critical' size='medium'
           message='Stock invalid, only NASDAQ stocks are supported at this time' />
       );
     } else if (loading) {
-      listNode = (
+      loadNode = (
         <Box direction='row' responsive={false}
           pad={{ between: 'small', horizontal: 'medium', vertical: 'medium' }}>
           <Spinning /><span>Loading...</span>
@@ -59,21 +75,16 @@ class Dashboard extends Component {
       );
     }
 
-    const stocksNode = (stocks || []).map((stock, index) => (
-        <ListItem key={index} justify='between'>
-          <Label><Anchor path={`/stocks/${stock._id}`} label={stock.symbol} /></Label>
-          <Box direction='row' responsive={false}
-            pad={{ between: 'small' }}>
-            <Label>{stock.date}</Label>
-          </Box>
-        </ListItem>
-      ));
+      const stocksNode = (stocks || []).map((stock, index) => (
+          <StockInfo stock={stock} index={index}></StockInfo>
+        ));
 
-      listNode = (
-        <List>
-          {stocksNode}
-        </List>
-      );
+        listNode = (
+          <List selectable={true} onSelect={this.onSelect}>
+            {stocksNode}
+          </List>
+        );
+
 
 
     return (
@@ -96,6 +107,7 @@ class Dashboard extends Component {
 
           </Header>
         </Section>
+        {loadNode}
         {listNode}
       </Article>
     );

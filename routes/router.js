@@ -1,4 +1,6 @@
-var StockController = require('../controllers/Stock')
+var StockController = require('../controllers/Stock');
+var NASDAQController = require('../controllers/NASDAQ');
+var StockPredController = require('../controllers/StockPred')
 
 module.exports = function(app, passport) {
 
@@ -30,6 +32,10 @@ module.exports = function(app, passport) {
 
     app.post('/add_stock', isLoggedInAPI, StockController.post_stock);
     app.get('/list_stocks', isLoggedInAPI, StockController.list_stocks);
+    app.get('/list_info', isLoggedInAPI, NASDAQController.list_info);
+    app.post('/get_info', isLoggedInAPI, NASDAQController.get_info);
+    app.get('/list_predictions', isLoggedInAPI, StockPredController.list_predictions);
+    app.post('/get_prediction', isLoggedInAPI, StockPredController.get_prediction);
 };
 
 function isLoggedInAPI(req, res, next) {

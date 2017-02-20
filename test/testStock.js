@@ -1,9 +1,9 @@
 var mongoose = require('mongoose')
-mongoose.connect(process.env.MONGODB_TEST)
 var should = require('should')
 
-var StockController = require('../controllers/Stock.js');
-var Stock = require('../models/Stock.js');
+var StockController = require('../controllers/Stock');
+var Stock = require('../models/Stock');
+var NASDAQController = require('../controllers/NASDAQ')
 var StockPred = require('../models/StockPred')
 var User = require('../models/User');
 var NASDAQ = require('../models/NASDAQ');
@@ -12,6 +12,26 @@ var NASDAQ = require('../models/NASDAQ');
 describe("StockController", function(){
   var user = null;
   var stock = null;
+
+  before(function(done){
+    mongoose.connect(process.env.MONGODB_TEST)
+    mongoose.connection.once('connected', () => {
+      mongoose.connection.db.dropDatabase(function(err){
+        if(err){
+          console.log(err)
+        }
+        else{
+          done()
+        }
+      });
+    });
+  });
+
+
+  after(function(done){
+    mongoose.disconnect();
+    done()
+  })
 
   beforeEach(function(done){
     var bobby = new User({
@@ -32,9 +52,17 @@ describe("StockController", function(){
             console.log(err);
            else {
              stock = aapl;
-             done()
+             var FB = new NASDAQ({symbol: "FB"});
+              FB.save(function(err, fb){
+                if(err)
+                 console.log(err);
+                else {
+                  done()
+                }
+              })
            }
          })
+
       }
     })
 
@@ -51,8 +79,42 @@ describe("StockController", function(){
     });
   });
 
+  it('creates a list of symbols for a user', function(done){
+    var id = user._id.toString();
+    var symbol = stock.symbol;
+
+    StockController.add_stock(id, symbol, function(err, stock){
+      if(err)
+        console.log(err);
+      else {
+        StockController.getSymbolsForUser(id, function(err, symbols){
+          symbols.length.should.equal(1);
+          StockController.add_stock(id, 'FB', function(err, stock){
+            if(err)
+              console.log(err);
+            else {
+              StockController.getSymbolsForUser(id, function(err, symbols){
+                symbols.length.should.equal(2);
+                NASDAQController.getInfoForUser(id, function(err, stock_infos){
+                  if(err){
+                    console.log(err)
+                  }
+                  else {
+                    stock_infos.length.should.equal(2);
+                    done()
+                  }
+                })
+              })
+            }
+          })
+        })
+
+      }
+    })
+  })
+
   it('adds a valid stock object to a users watchlist', function(done){
-    var id = user.google.id;
+    var id = user._id.toString();
     var symbol = stock.symbol;
 
     StockController.add_stock(id, symbol, function(err, stock){
@@ -63,15 +125,15 @@ describe("StockController", function(){
           stocks.length.should.equal(1)
           stocks[0].requested_by_user_id.should.equal(id)
           stocks[0].symbol.should.equal(symbol)
-
+          done()
         })
-        done()
+
       }
     })
   })
 
   it('adds a valid stock object to a users watchlist and doesnt duplicate on a second user', function(done){
-    var id = user.google.id;
+    var id = user._id.toString();
     var symbol = stock.symbol;
     var id2 = '341293493949'
 
@@ -100,21 +162,21 @@ describe("StockController", function(){
   })
 
   it('doesnt add valid stock object to a users watchlist', function(done){
-    var id = user.google.id;
+    var id = user._id.toString();
     var symbol = "dfadsfasdf";
 
     StockController.add_stock(id, symbol, function(err, stock){
       if(err){
         Stock.find({}, function(err, stocks){
           stocks.length.should.equal(0)
+          done()
         })
-        done()
       }
     })
   })
 
   it('can list the stocks of a users watchlist', function(done){
-    var id = user.google.id;
+    var id = user._id.toString();
     var symbol = stock.symbol;
 
     StockController.list_for_user_id(id, function(err, stocks){
@@ -133,7 +195,7 @@ describe("StockController", function(){
   })
 
   it('doesnt duplicate a valid stock object to a users watchlist', function(done){
-    var id = user.google.id;
+    var id = user._id.toString();
     var symbol = stock.symbol;
 
     StockController.add_stock(id, symbol, function(err, stock){

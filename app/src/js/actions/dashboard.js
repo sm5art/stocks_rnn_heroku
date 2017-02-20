@@ -2,9 +2,14 @@ import {
  DASH_ERROR, UPDATE_STOCKS, UNLOAD_STOCKS
 } from '../actions';
 
+import { getPrediction } from './prediction'
+import { getInfo } from './stockinfo'
+
 export function addStock(symbol) {
 
   return dispatch => {
+    dispatch(getPrediction(symbol))
+    dispatch(getInfo(symbol))
     fetch('/add_stock', {
         method:'POST',
         headers: {
@@ -26,7 +31,7 @@ export function addStock(symbol) {
   }
 }
 
-export function initialize() {
+export function initializeStocks() {
   return dispatch => {
     fetch('/list_stocks', {
         credentials:'include',
@@ -54,6 +59,6 @@ export function updateStocks(stocks) {
   return { type: UPDATE_STOCKS,  stocks};
 }
 
-export function unload(){
+export function unloadStocks(){
   return { type: UNLOAD_STOCKS };
 }
