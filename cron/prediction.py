@@ -29,11 +29,10 @@ db = get_db()
 
 stocks = []
 
-start = datetime.datetime(2010, 1, 1)
+start = datetime.datetime(2000, 1, 1)
 end = datetime.datetime.today() + datetime.timedelta(days=1)
 
-discriminator = datetime.datetime.utcnow().date() + BDay(1)
-
+discriminator = datetime.datetime.utcnow().date() - BDay(1) + BDay(1)
 cursor = db.stock_preds.find({ 'pred_date': {'$ne': discriminator} })
 
 for stock in cursor:
