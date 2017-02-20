@@ -28,6 +28,7 @@ import { initializeStocks, unloadStocks } from '../actions/dashboard';
 import { initializePrediction, unloadPredictions} from '../actions/prediction';
 import { initializeInfo, unloadInfo} from '../actions/stockinfo';
 import { pageLoaded } from './utils';
+import { browserHistory as history } from 'react-router';
 
 class Dashboard extends Component {
   constructor(){
@@ -35,7 +36,10 @@ class Dashboard extends Component {
     this.onSelect.bind(this)
   }
 
-  onSelect(_id){
+  onSelect(mapStockToIndex){
+    return function(_id) {
+        history.push(`/stock/${mapStockToIndex[_id].symbol}`)
+    }
   }
 
   componentDidMount() {
@@ -73,13 +77,14 @@ class Dashboard extends Component {
         </Box>
       );
     }
-
-      const stocksNode = (stocks || []).map((stock, index) => (
-          <StockInfo stock={stock} index={index}></StockInfo>
-        ));
+      let mapStockToIndex = {}
+      const stocksNode = (stocks || []).map((stock, index) => {
+          mapStockToIndex[index] = stock
+          return (<StockInfo stock={stock} index={index}></StockInfo>);
+      });
 
         listNode = (
-          <List selectable={true} onSelect={this.onSelect}>
+          <List selectable={true} onSelect={this.onSelect(mapStockToIndex)}>
             {stocksNode}
           </List>
         );
@@ -115,7 +120,7 @@ class Dashboard extends Component {
 
 Dashboard.propTypes = {
   dispatch: PropTypes.func.isRequired,
-  error: PropTypes.boolean,
+  error: PropTypes.bool.isRequired,
   stocks: PropTypes.arrayOf(PropTypes.object)
 };
 

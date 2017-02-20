@@ -2,7 +2,7 @@ import path from 'path';
 import webpack from 'webpack';
 import CopyWebpackPlugin from 'copy-webpack-plugin';
 
-const env = 'production';
+const env = 'dev';
 
 let plugins = [
   new CopyWebpackPlugin([{ from: './public' }]),
@@ -50,29 +50,11 @@ if (env === 'production') {
     })
   );
 } else {
-  plugins = plugins.concat([
-    new webpack.HotModuleReplacementPlugin()
-  ]);
   devConfig.devtool = 'cheap-module-source-map';
   devConfig.entry = [
-    require.resolve('react-dev-utils/webpackHotDevClient'),
-    './src/js/index.js'
+    './app/src/js/index.js'
   ];
-  devConfig.devServer = {
-    compress: true,
-    clientLogLevel: 'none',
-    contentBase: path.resolve('./dist'),
-    publicPath: '/',
-    quiet: true,
-    hot: true,
-    watchOptions: {
-      ignored: /node_modules/
-    },
-    historyApiFallback: true,
-    proxy: {
-      '/api/*': 'http://localhost:8102'
-    }
-  };
+
 }
 
 plugins.push(new webpack.LoaderOptionsPlugin(loaderOptionsConfig));

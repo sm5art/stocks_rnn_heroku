@@ -1,8 +1,7 @@
 import Login from './screens/Login';
 import Main from './components/Main';
 import Dashboard from './screens/Dashboard';
-import Tasks from './screens/Tasks';
-import Task from './screens/Task';
+import Stock from './screens/Stock';
 import NotFound from './screens/NotFound';
 
 import React from 'react';
@@ -21,8 +20,7 @@ export default function getRoutes(store) {
       <IndexRoute component={Dashboard} onEnter={isAuth}/>
       <Route path="login" component={Login}/>
       <Route path="dashboard" component={Dashboard} onEnter={isAuth}/>
-      <Route path="tasks/:id" component={Task} onEnter={isAuth}/>
-      <Route path='tasks' component={Tasks} onEnter={isAuth}/>
+      <Route path="stock/:symbol" component={Stock} onEnter={isAuth}/>
       <Route path='*' component={NotFound}/>
     </Route>
     )

@@ -3,3 +3,4 @@ venv
 *.pyc
 .env
 .local_env
+.prod_env

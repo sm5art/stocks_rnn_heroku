@@ -53,7 +53,6 @@ class StockInfo extends Component {
 }
 
 StockInfo.propTypes = {
-  symbol: PropTypes.string.isRequired,
   dispatch: PropTypes.func.isRequired,
   info: PropTypes.object.isRequired,
   prediction: PropTypes.object.isRequired

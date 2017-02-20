@@ -41,5 +41,6 @@ require('./routes/router')(app,passport);
 app.get('*', function(req, res) {
     res.render("index.ejs");
 });
+
 app.listen(port);
 console.log("server running on port "+port)

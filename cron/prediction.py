@@ -68,17 +68,17 @@ def create_data(index):
     train_size = int(len(dataset))
     train = dataset[0:train_size]
     #test = dataset[train_size:]
-    look_back = 5
-    trainX, trainY = create_dataset(train, look_back)
+    look_back = 1
+    trainX, trainY = create_dataset(train, look_back=look_back)
     #testX, testY = create_dataset(test, look_back)
     trainX = numpy.reshape(trainX, (trainX.shape[0], 1, trainX.shape[1]))
     #testX = numpy.reshape(testX, (testX.shape[0],1,testX.shape[1]))
     return trainX, trainY, scaler, dataset
 
-def train(index, epochs=5):
+def train(index, epochs=8):
     # make predictions
     model = Sequential()
-    model.add(LSTM(24, input_dim=5))
+    model.add(LSTM(32, input_dim=1))
     model.add(Dense(1))
     model.compile(loss='mean_squared_error', optimizer='adam')
     trainX, trainY, scaler, dataset = create_data(index)
@@ -117,7 +117,7 @@ def main():
         for i in range(len(previous_points)):
             previous.append({ "date": convert_time(previous_dates[i]),"value": previous_points[i] })
         time_of_prediction = convert_time(dates[-1])+BDay(1)
-        y = model.predict(numpy.array(dataset[-5:]).reshape(1,1,5))
+        y = model.predict(numpy.array(dataset[-1:]).reshape(1,1,1))
         prediction = scaler.inverse_transform(y).reshape(1)[0]
         previous_predictions = []
         for i in trainPredict:
