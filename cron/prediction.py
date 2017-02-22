@@ -68,17 +68,17 @@ def create_data(index):
     train_size = int(len(dataset))
     train = dataset[0:train_size]
     #test = dataset[train_size:]
-    look_back = 3
+    look_back = 5
     trainX, trainY = create_dataset(train, look_back=look_back)
     #testX, testY = create_dataset(test, look_back)
     trainX = numpy.reshape(trainX, (trainX.shape[0], 1, trainX.shape[1]))
     #testX = numpy.reshape(testX, (testX.shape[0],1,testX.shape[1]))
     return trainX, trainY, scaler, dataset
 
-def train(index, epochs=8):
+def train(index, epochs=11):
     # make predictions
     model = Sequential()
-    model.add(LSTM(16, input_dim=3))
+    model.add(LSTM(25, input_dim=5))
     model.add(Dense(1))
     model.compile(loss='mean_squared_error', optimizer='adam')
     trainX, trainY, scaler, dataset = create_data(index)
@@ -117,13 +117,13 @@ def main():
         for i in range(len(previous_points)):
             previous.append({ "date": convert_time(previous_dates[i]),"value": previous_points[i] })
         time_of_prediction = convert_time(dates[-1])+BDay(1)
-        y0 = model.predict(numpy.array(dataset[-4:-1]).reshape(1,1,3))
-        y1 = model.predict(numpy.array(dataset[-3:]).reshape(1,1,3))
+        y1 = model.predict(numpy.array(dataset[-5:]).reshape(1,1,5))
         prediction = scaler.inverse_transform(y1).reshape(1)[0]
         previous_predictions = []
         for i in trainPredict:
             previous_predictions.append(float(i[0]))
-        previous_predictions.append(float(scaler.inverse_transform(y0).reshape(1)[0]))
+        last_percent_change = previous_points[-1]/previous_points[-2]
+        previous_predictions.append(previous_predictions[-1]*last_percent_change)
         db.stock_preds.update_one({'symbol': symbol}, {'$set':{ 'previous_points': previous, 'previous_predictions': previous_predictions[-30:], 'prediction': float(prediction), 'pred_date': time_of_prediction }})
 
 

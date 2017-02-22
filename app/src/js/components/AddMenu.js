@@ -23,6 +23,12 @@ class AddMenu extends Component {
     this.addStock = this.addStock.bind(this);
   }
 
+  componentDidMount(){
+    if(this.state.open){
+      document.getElementById("ssinput").focus()
+    }
+  }
+
   _onClick(event) {
     this.setState({open: true})
   }
@@ -42,7 +48,7 @@ class AddMenu extends Component {
       <Layer closer={true} flush={true} onClose={()=>{this.setState({open: false})}}>
         <Box align="center" justify="center" pad="medium">
           <TextInput id="ssinput"></TextInput>
-          <Button onClick={this.addStock} type={"submit"} label="add stock" accent={true} primary={true}/>
+          <Button onClick={this.addStock} label="add stock" accent={true}/>
         </Box>
       </Layer>
       )

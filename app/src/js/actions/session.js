@@ -5,17 +5,27 @@ const localStorage = window.localStorage;
 
 export function initialize() {
   return (dispatch) => {
-    return fetch('/session', {credentials: 'include'})
-      .then(response => response.json())
-      .then(json => {
-        if(json["user"] != undefined){
-          dispatch({type:SESSION_LOAD, payload:{email: json.user._id, name: json.user.google.name, token: json.user.google.token}})
-          history.push(window.location.pathname == '/login' ? '/dashboard': window.location.pathname)
-        }
-        else {
-          dispatch({type: SESSION_LOAD, payload:{}})
-        }
-      })
+    const { email, name, token } = localStorage;
+    if(token){
+      dispatch({type:SESSION_LOAD, payload:{email, name, token}})
+    }
+    else{
+      fetch('/session', {credentials: 'include'})
+        .then(response => response.json())
+        .then(json => {
+          if(json["user"] != undefined){
+            localStorage.email = json.user._id
+            localStorage.name = json.user.google.name
+            localStorage.token = json.user.google.token
+            dispatch({type:SESSION_LOAD, payload:{email: json.user._id, name: json.user.google.name, token: json.user.google.token}})
+            history.push('/dashboard')
+          }
+          else {
+            dispatch({type: SESSION_LOAD, payload:{}})
+          }
+        })
+    }
+
   };
 }
 

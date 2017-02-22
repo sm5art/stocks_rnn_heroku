@@ -11,7 +11,7 @@ import Label from 'grommet/components/Label';
 import List from 'grommet/components/List';
 import ListItem from 'grommet/components/ListItem';
 import Title from 'grommet/components/Title'
-import Search from 'grommet/components/Search'
+import SearchInput from 'grommet/components/SearchInput'
 import Notification from 'grommet/components/Notification';
 import Paragraph from 'grommet/components/Paragraph';
 import Value from 'grommet/components/Value';
@@ -29,11 +29,14 @@ import { initializePrediction, unloadPredictions} from '../actions/prediction';
 import { initializeInfo, unloadInfo} from '../actions/stockinfo';
 import { pageLoaded } from './utils';
 import { browserHistory as history } from 'react-router';
+import Fuse from 'fuse.js'
 
 class Dashboard extends Component {
   constructor(){
     super()
-    this.onSelect.bind(this)
+    this.onSelect = this.onSelect.bind(this)
+    this.handleSearch = this.handleSearch.bind(this)
+    this.state = {discriminators: []};
   }
 
   onSelect(mapStockToIndex){
@@ -42,24 +45,42 @@ class Dashboard extends Component {
     }
   }
 
+  handleSearch(e){
+    const value = e.target.value
+    const { loading, stocks } = this.props;
+    if(!loading){
+      let fuse = new Fuse(stocks, { keys: ["symbol"]})
+      var result = fuse.search(value)
+      this.setState({discriminators: result})
+    }
+  }
+
   componentDidMount() {
     pageLoaded('Dashboard');
-    const { dispatch } = this.props;
-    dispatch(initializeStocks())
-    dispatch(initializeInfo())
-    dispatch(initializePrediction())
+    const { dispatch, loading } = this.props;
+    if(loading){
+      dispatch(initializeStocks())
+      dispatch(initializeInfo())
+      dispatch(initializePrediction())
+    }
   }
 
   componentWillUnmount() {
     const {dispatch} = this.props;
-    dispatch(unloadInfo())
-    dispatch(unloadPredictions())
-    dispatch(unloadStocks())
   }
 
   render() {
     const { error, loading, stocks } = this.props;
+    const { discriminators } = this.state;
     const { intl } = this.context;
+    let stockList;
+    console.log(discriminators)
+    if(discriminators.length > 0){
+      stockList = discriminators
+    }
+    else {
+      stockList = stocks
+    }
 
     let errorNode;
     let listNode;
@@ -78,7 +99,7 @@ class Dashboard extends Component {
       );
     }
       let mapStockToIndex = {}
-      const stocksNode = (stocks || []).map((stock, index) => {
+      const stocksNode = (stockList || []).map((stock, index) => {
           mapStockToIndex[index] = stock
           return (<StockInfo stock={stock} index={index}></StockInfo>);
       });
@@ -88,7 +109,6 @@ class Dashboard extends Component {
             {stocksNode}
           </List>
         );
-
 
 
     return (
@@ -104,9 +124,12 @@ class Dashboard extends Component {
           <Header>
               <Title>Watchlist</Title>
               <Box flex="grow"></Box>
-              <Search inline={true}
-                size='medium'
+              <SearchInput
+                id="ssearch"
+                onDOMChange={this.handleSearch}
                 placeHolder='Search'
+                onSelect={(a)=>{document.getElementById("ssearch").value = a.suggestion; const fakeEvent = {target:{value:a.suggestion}}; this.handleSearch(fakeEvent)}}
+                suggestions={discriminators.map((st)=>{return st.symbol})}
                 dropAlign={{"right": "right"}} />
 
           </Header>

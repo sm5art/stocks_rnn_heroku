@@ -22,16 +22,12 @@ class Stock extends Component {
 
   componentDidMount() {
     const { params: {symbol}, dispatch, prediction } = this.props;
-    dispatch(getPrediction(symbol));
-    dispatch(getInfo(symbol));
     pageLoaded(symbol);
   }
 
 
   componentWillUnmount(){
     const { dispatch } = this.props;
-    dispatch(unloadPredictions());
-    dispatch(unloadInfo());
   }
 
   render() {
@@ -49,7 +45,6 @@ class Stock extends Component {
 
     if(info.data[symbol]){
       if(!info.loading) {
-
       }
       else{
         infoNode = <Spinning/>;
@@ -63,7 +58,7 @@ class Stock extends Component {
           dates.push(e.date.substring(0,10))
           real_points.push(e.value)
         }
-        let previous_predictions = prediction.data[symbol].previous_predictions
+        let previous_predictions = prediction.data[symbol].previous_predictions.slice()
         dates.push(`${prediction.data[symbol].pred_date.substring(0,10)} next close`)
         previous_predictions.push(parseFloat(prediction.data[symbol].prediction))
         var data = {

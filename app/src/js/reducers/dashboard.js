@@ -11,7 +11,8 @@ const initialState = {
 
 const handlers = {
   [UPDATE_STOCKS]: (state, action) => {
-    return {stocks: state.stocks.concat(action.stocks), loading: false, error: false}
+    const bigArray = state.stocks.concat(action.stocks)
+    return {stocks: bigArray, loading: false, error: false}
   },
   [DASH_ERROR]: () =>{
     return { error: true }
