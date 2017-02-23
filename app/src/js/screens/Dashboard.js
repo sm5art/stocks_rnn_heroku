@@ -58,10 +58,10 @@ class Dashboard extends Component {
   componentDidMount() {
     pageLoaded('Dashboard');
     const { dispatch, loading } = this.props;
+    dispatch(initializeInfo())
+    dispatch(initializePrediction())
     if(loading){
       dispatch(initializeStocks())
-      dispatch(initializeInfo())
-      dispatch(initializePrediction())
     }
   }
 

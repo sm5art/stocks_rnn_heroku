@@ -44790,10 +44790,10 @@ var Dashboard = function (_Component) {
           dispatch = _props2.dispatch,
           loading = _props2.loading;
 
+      dispatch((0, _stockinfo.initializeInfo)());
+      dispatch((0, _prediction.initializePrediction)());
       if (loading) {
         dispatch((0, _dashboard.initializeStocks)());
-        dispatch((0, _stockinfo.initializeInfo)());
-        dispatch((0, _prediction.initializePrediction)());
       }
     }
   }, {
