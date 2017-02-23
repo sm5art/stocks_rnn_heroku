@@ -6,7 +6,8 @@ const localStorage = window.localStorage;
 export function initialize() {
   return (dispatch) => {
     const { email, name, token } = localStorage;
-    if(token){
+    console.log(token)
+    if(token != "undefined"){
       dispatch({type:SESSION_LOAD, payload:{email, name, token}})
     }
     else{
@@ -14,9 +15,9 @@ export function initialize() {
         .then(response => response.json())
         .then(json => {
           if(json["user"] != undefined){
-            localStorage.email = json.user._id
-            localStorage.name = json.user.google.name
-            localStorage.token = json.user.google.token
+            localStorage.setItem("email", json.user._id)
+            localStorage.setItem("name", json.user.google.name)
+            localStorage.setItem("token", json.user.google.token)
             dispatch({type:SESSION_LOAD, payload:{email: json.user._id, name: json.user.google.name, token: json.user.google.token}})
             history.push('/dashboard')
           }
@@ -31,6 +32,9 @@ export function initialize() {
 
 export function logout(session) {
   return (dispatch) => {
+    localStorage.email = undefined
+    localStorage.name = undefined
+    localStorage.token = undefined
     dispatch({ type: SESSION_LOGOUT });
 
     window.location.href = '/logout'; // reload fully

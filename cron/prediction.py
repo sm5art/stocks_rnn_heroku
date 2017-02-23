@@ -78,7 +78,7 @@ def create_data(index):
 def train(index, epochs=11):
     # make predictions
     model = Sequential()
-    model.add(LSTM(25, input_dim=5))
+    model.add(LSTM(5, input_dim=5))
     model.add(Dense(1))
     model.compile(loss='mean_squared_error', optimizer='adam')
     trainX, trainY, scaler, dataset = create_data(index)
