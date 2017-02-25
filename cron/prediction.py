@@ -34,7 +34,7 @@ end = datetime.datetime.today() + datetime.timedelta(days=1)
 
 discriminator = None
 
-if datetime.datetime.utcnow().weekday() < 5  and datetime.datetime.utcnow() < datetime.datetime.fromordinal(datetime.datetime.utcnow().date().toordinal())+datetime.timedelta(hours=22):
+if (datetime.datetime.utcnow().weekday() < 4 or datetime.datetime.utcnow().weekday() == 6) and datetime.datetime.utcnow() < datetime.datetime.fromordinal(datetime.datetime.utcnow().date().toordinal())+datetime.timedelta(hours=22):
     discriminator = datetime.datetime.utcnow().date()
 else:
     discriminator = datetime.datetime.utcnow().date() + BDay(1)
